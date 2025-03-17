@@ -56,8 +56,6 @@ public class SouborFrame extends JFrame {
         int vysledek = fc.showOpenDialog(this);
         if (vysledek == JFileChooser.APPROVE_OPTION) {
             File soubor = fc.getSelectedFile();
-            //String[] celaCesta = soubor.getAbsolutePath().split("resources" + (Pattern.quote(File.separator)));
-            //cesta = "resources/" + celaCesta[1]; //asi nemusí být tak složitě (?)
             cesta = soubor.getPath();
             try(Scanner scanner = new Scanner(new BufferedReader(new FileReader(soubor)))) {
                 taObsah.setText(null);
@@ -80,10 +78,11 @@ public class SouborFrame extends JFrame {
                 System.err.println("nastala chyba");
             }
         } else {
-            JFileChooser fc = new JFileChooser("resources/");
-            int vysledek = fc.showOpenDialog(this);
-            if (vysledek == JFileChooser.APPROVE_OPTION) {
-                File soubor = fc.getSelectedFile();
+            JFileChooser fc = new JFileChooser("resources/"); // "." = to, ve které cestě nyní jsme; nebo si vybereme vlastní cestu
+            int vysledek = fc.showSaveDialog(this); //open = když otevíráme, save = když ukládáme (umožňuje vytvořit nový soubor) => mají jiné nadpisy; u showDialog si můžeme popisek dát vlastní
+            //parent => když dáváme okno, vyskočí uprostřed daného okna; jestli dáme mull => zobrazí se uprostřed monitoru (problém, když máme více monitorů)
+            if (vysledek == JFileChooser.APPROVE_OPTION) { // dá se nastavit i maska => v materiálech = fc.setFileFilter(new FileNameExtensionFilter("Obrázky", "png", "jpg"));
+                File soubor = fc.getSelectedFile(); //asi i podporuje multiselect (getSelectedFiles())
                 cesta = soubor.getPath();
                 try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(cesta)))) {
                     writer.println(taObsah.getText());
